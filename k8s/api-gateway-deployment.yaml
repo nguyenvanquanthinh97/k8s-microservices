@@ -18,9 +18,9 @@ spec:
         - name: api-gateway
           image: 080196/microservice
           ports:
-            - name: http
-              containerPort: 3000
-              protocol: TCP
+          - name: http
+            containerPort: 3000
+            protocol: TCP
           livenessProbe:
             httpGet:
               path: /
@@ -30,10 +30,10 @@ spec:
               path: /
               port: http
           env:
-            - name: SERVICES
-              value: api
-            - name: PORT
-              value: "3000"
+          - name: SERVICES
+            value: api
+          - name: PORT
+            value: "3000"
           envFrom:
-            - configMapRef:
-                name: microservice-cm
+          - configMapRef:
+              name: microservice-cm

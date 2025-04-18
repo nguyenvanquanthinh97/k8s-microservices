@@ -16,7 +16,7 @@ spec:
         component: nats
     spec:
       containers:
-        - name: nats
-          image: nats
-          ports:
-            - containerPort: 4222
+      - name: nats
+        image: nats
+        ports:
+        - containerPort: 4222

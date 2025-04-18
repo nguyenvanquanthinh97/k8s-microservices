@@ -8,4 +8,4 @@ spec:
   selector:
     component: nats
   ports:
-    - port: 4222
+  - port: 4222

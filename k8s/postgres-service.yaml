@@ -8,4 +8,4 @@ spec:
   selector:
     component: postgres
   ports:
-    - port: 5432
+  - port: 5432
