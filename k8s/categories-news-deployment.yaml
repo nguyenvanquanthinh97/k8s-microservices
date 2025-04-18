@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: categories-service
-        image: 080196/microservice
+        image: registry.gitlab.com/myself2870816/nodejs-microservice
         env:
         - name: SERVICES
           value: categories
@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: news-service
-        image: 080196/microservice
+        image: registry.gitlab.com/myself2870816/nodejs-microservice
         env:
         - name: SERVICES
           value: news

@@ -1,0 +1,21 @@
+stages:
+  - build
+
+build root image:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  tags:
+    - microservice
+  before_script:
+    - echo "$REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u microservice --password-stdin
+  script:
+    - docker build . --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  only:
+    - master
