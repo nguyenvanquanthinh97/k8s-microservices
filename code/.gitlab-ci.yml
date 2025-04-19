@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 build root image:
   stage: build
@@ -17,5 +18,32 @@ build root image:
     - docker build . --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  only:
+    - master
+
+deploy stage:
+  stage: deploy
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  tags:
+    - microservice
+  before_script:
+    - mkdir ~/.ssh
+    - echo "${SERVER_KEY_PEM}" | tr -d '\r' > ~/.ssh/gitlab_runner
+    - chmod 600 ~/.ssh/gitlab_runner
+    - ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+  script:
+    - |
+      ssh -i ~/.ssh/gitlab_runner $SERVER_USER@$SERVER_IP << EOF
+        alias kubectl="minikube kubectl --"
+        kubectl set image deployment/api-gateway api-gateway=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+        kubectl set image deployment/news-service news-service=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+        kubectl set image deployment/categories-service categories-service=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+        exit
+      EOF
   only:
     - master

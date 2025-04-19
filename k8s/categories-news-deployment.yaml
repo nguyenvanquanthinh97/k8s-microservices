@@ -14,6 +14,8 @@ spec:
       labels:
         component: categories-service
     spec:
+      imagePullSecrets:
+      - name: microservice-registry
       containers:
       - name: categories-service
         image: registry.gitlab.com/myself2870816/nodejs-microservice
@@ -40,6 +42,8 @@ spec:
       labels:
         component: news-service
     spec:
+      imagePullSecrets:
+      - name: microservice-registry
       containers:
       - name: news-service
         image: registry.gitlab.com/myself2870816/nodejs-microservice
